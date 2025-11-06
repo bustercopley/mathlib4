@@ -200,61 +200,85 @@ theorem smul_inv (r : k) (φ : k⟦X⟧) : (r • φ)⁻¹ = r⁻¹ • φ⁻¹ 
   MvPowerSeries.smul_inv _ _
 
 /-- `firstUnitCoeff` is the non-zero coefficient whose index is `f.order`, seen as a unit of the
-  field. It is obtained using `divided_by_X_pow_order`, defined in `PowerSeries.Order`. -/
+  field. It is obtained using `divXPowOrder`, defined in `PowerSeries.Order`. -/
 def firstUnitCoeff {f : k⟦X⟧} (hf : f ≠ 0) : kˣ :=
   have : Invertible (constantCoeff (divXPowOrder f)) := by
     apply invertibleOfNonzero
     simpa [constantCoeff_divXPowOrder_eq_zero_iff.not]
   unitOfInvertible (constantCoeff (divXPowOrder f))
 
-/-- `Inv_divided_by_X_pow_order` is the inverse of the element obtained by diving a non-zero power
+/-- `Inv_divXPowOrder` is the inverse of the element obtained by diving a non-zero power
 series by the largest power of `X` dividing it. Useful to create a term of type `Units`, done in
-`Unit_divided_by_X_pow_order` -/
-def Inv_divided_by_X_pow_order {f : k⟦X⟧} (hf : f ≠ 0) : k⟦X⟧ :=
+`Unit_divXPowOrder` -/
+def Inv_divXPowOrder {f : k⟦X⟧} (hf : f ≠ 0) : k⟦X⟧ :=
   invOfUnit (divXPowOrder f) (firstUnitCoeff hf)
 
-@[simp]
-theorem Inv_divided_by_X_pow_order_rightInv {f : k⟦X⟧} (hf : f ≠ 0) :
-    divXPowOrder f * Inv_divided_by_X_pow_order hf = 1 :=
-  mul_invOfUnit (divXPowOrder f) (firstUnitCoeff hf) rfl
+@[deprecated (since := "2025-10-06")]
+noncomputable alias Inv_divided_by_X_pow_order := Inv_divXPowOrder
 
 @[simp]
-theorem Inv_divided_by_X_pow_order_leftInv {f : k⟦X⟧} (hf : f ≠ 0) :
-    Inv_divided_by_X_pow_order hf * divXPowOrder f = 1 := by
+theorem Inv_divXPowOrder_rightInv {f : k⟦X⟧} (hf : f ≠ 0) :
+    divXPowOrder f * Inv_divXPowOrder hf = 1 :=
+  mul_invOfUnit (divXPowOrder f) (firstUnitCoeff hf) rfl
+
+@[deprecated (since := "2025-10-06")]
+alias Inv_divided_by_X_pow_order_rightInv := Inv_divXPowOrder_rightInv
+
+@[simp]
+theorem Inv_divXPowOrder_leftInv {f : k⟦X⟧} (hf : f ≠ 0) :
+    Inv_divXPowOrder hf * divXPowOrder f = 1 := by
   rw [mul_comm]
   exact mul_invOfUnit (divXPowOrder f) (firstUnitCoeff hf) rfl
 
+@[deprecated (since := "2025-10-06")]
+alias Inv_divided_by_X_pow_order_leftInv := Inv_divXPowOrder_leftInv
+
 open scoped Classical in
-/-- `Unit_of_divided_by_X_pow_order` is the unit power series obtained by dividing a non-zero
+/-- `Unit_of_divXPowOrder` is the unit power series obtained by dividing a non-zero
 power series by the largest power of `X` that divides it. -/
-def Unit_of_divided_by_X_pow_order (f : k⟦X⟧) : k⟦X⟧ˣ :=
+def Unit_of_divXPowOrder (f : k⟦X⟧) : k⟦X⟧ˣ :=
   if hf : f = 0 then 1
   else
     { val := divXPowOrder f
-      inv := Inv_divided_by_X_pow_order hf
-      val_inv := Inv_divided_by_X_pow_order_rightInv hf
-      inv_val := Inv_divided_by_X_pow_order_leftInv hf }
+      inv := Inv_divXPowOrder hf
+      val_inv := Inv_divXPowOrder_rightInv hf
+      inv_val := Inv_divXPowOrder_leftInv hf }
 
-theorem isUnit_divided_by_X_pow_order {f : k⟦X⟧} (hf : f ≠ 0) :
+@[deprecated (since := "2025-10-06")]
+noncomputable alias Unit_of_divided_by_X_pow_order := Unit_of_divXPowOrder
+
+theorem isUnit_divXPowOrder {f : k⟦X⟧} (hf : f ≠ 0) :
     IsUnit (divXPowOrder f) :=
-  ⟨Unit_of_divided_by_X_pow_order f,
-    by simp only [Unit_of_divided_by_X_pow_order, dif_neg hf, Units.val_mk]⟩
+  ⟨Unit_of_divXPowOrder f,
+    by simp only [Unit_of_divXPowOrder, dif_neg hf, Units.val_mk]⟩
 
-theorem Unit_of_divided_by_X_pow_order_nonzero {f : k⟦X⟧} (hf : f ≠ 0) :
-    ↑(Unit_of_divided_by_X_pow_order f) = divXPowOrder f := by
-  simp only [Unit_of_divided_by_X_pow_order, dif_neg hf, Units.val_mk]
+@[deprecated (since := "2025-10-06")]
+alias isUnit_divided_by_X_pow_order := isUnit_divXPowOrder
+
+theorem Unit_of_divXPowOrder_nonzero {f : k⟦X⟧} (hf : f ≠ 0) :
+    ↑(Unit_of_divXPowOrder f) = divXPowOrder f := by
+  simp only [Unit_of_divXPowOrder, dif_neg hf, Units.val_mk]
+
+@[deprecated (since := "2025-10-06")]
+alias Unit_of_divided_by_X_pow_order_nonzero := Unit_of_divXPowOrder_nonzero
 
 @[simp]
-theorem Unit_of_divided_by_X_pow_order_zero : Unit_of_divided_by_X_pow_order (0 : k⟦X⟧) = 1 := by
-  simp only [Unit_of_divided_by_X_pow_order, dif_pos]
+theorem Unit_of_divXPowOrder_zero : Unit_of_divXPowOrder (0 : k⟦X⟧) = 1 := by
+  simp only [Unit_of_divXPowOrder, dif_pos]
 
-theorem eq_divided_by_X_pow_order_Iff_Unit {f : k⟦X⟧} (hf : f ≠ 0) :
+@[deprecated (since := "2025-10-06")]
+alias Unit_of_divided_by_X_pow_order_zero := Unit_of_divXPowOrder_zero
+
+theorem eq_divXPowOrder_Iff_Unit {f : k⟦X⟧} (hf : f ≠ 0) :
     f = divXPowOrder f ↔ IsUnit f :=
-  ⟨fun h ↦ by rw [h]; exact isUnit_divided_by_X_pow_order hf, fun h ↦ by
+  ⟨fun h ↦ by rw [h]; exact isUnit_divXPowOrder hf, fun h ↦ by
     have : f.order = 0 := by
       simp [order_zero_of_unit h]
     conv_lhs => rw [← X_pow_order_mul_divXPowOrder (f := f), this, ENat.toNat_zero,
       pow_zero, one_mul]⟩
+
+@[deprecated (since := "2025-10-06")]
+alias eq_divided_by_X_pow_order_Iff_Unit := eq_divXPowOrder_Iff_Unit
 
 end Field
 
@@ -286,8 +310,8 @@ theorem hasUnitMulPowIrreducibleFactorization :
       (by
         intro f hf
         use f.order.toNat
-        use Unit_of_divided_by_X_pow_order f
-        simp only [Unit_of_divided_by_X_pow_order_nonzero hf]
+        use Unit_of_divXPowOrder f
+        simp only [Unit_of_divXPowOrder_nonzero hf]
         exact X_pow_order_mul_divXPowOrder)⟩
 
 instance : UniqueFactorizationMonoid k⟦X⟧ :=
@@ -321,22 +345,22 @@ theorem maximalIdeal_eq_span_X : IsLocalRing.maximalIdeal (k⟦X⟧) = Ideal.spa
   rw [IsLocalRing.eq_maximalIdeal hX]
 
 instance : NormalizationMonoid k⟦X⟧ where
-  normUnit f := (Unit_of_divided_by_X_pow_order f)⁻¹
-  normUnit_zero := by simp only [Unit_of_divided_by_X_pow_order_zero, inv_one]
+  normUnit f := (Unit_of_divXPowOrder f)⁻¹
+  normUnit_zero := by simp only [Unit_of_divXPowOrder_zero, inv_one]
   normUnit_mul  := fun hf hg ↦ by
     simp only [← mul_inv, inv_inj]
-    simp only [Unit_of_divided_by_X_pow_order_nonzero (mul_ne_zero hf hg),
-      Unit_of_divided_by_X_pow_order_nonzero hf, Unit_of_divided_by_X_pow_order_nonzero hg,
+    simp only [Unit_of_divXPowOrder_nonzero (mul_ne_zero hf hg),
+      Unit_of_divXPowOrder_nonzero hf, Unit_of_divXPowOrder_nonzero hg,
       Units.ext_iff, Units.val_mul, divXPowOrder_mul_divXPowOrder]
   normUnit_coe_units := by
     intro u
     set u₀ := u.1 with hu
     have h₀ : IsUnit u₀ := ⟨u, hu.symm⟩
-    rw [inv_inj, Units.ext_iff, ← hu, Unit_of_divided_by_X_pow_order_nonzero h₀.ne_zero]
-    exact ((eq_divided_by_X_pow_order_Iff_Unit h₀.ne_zero).mpr h₀).symm
+    rw [inv_inj, Units.ext_iff, ← hu, Unit_of_divXPowOrder_nonzero h₀.ne_zero]
+    exact ((eq_divXPowOrder_Iff_Unit h₀.ne_zero).mpr h₀).symm
 
 theorem normUnit_X : normUnit (X : k⟦X⟧) = 1 := by
-  simp [normUnit, ← Units.val_eq_one, Unit_of_divided_by_X_pow_order_nonzero]
+  simp [normUnit, ← Units.val_eq_one, Unit_of_divXPowOrder_nonzero]
 
 theorem X_eq_normalizeX : (X : k⟦X⟧) = normalize X := by
   simp only [normalize_apply, normUnit_X, Units.val_one, mul_one]
